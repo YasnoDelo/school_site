@@ -1,0 +1,8 @@
+{{ define "content" }}
+<h1>{{ .Title }}</h1>
+<ul>
+  {{ range .FileNames }}
+    <li><a href="/{{ . }}">{{ . | html }}</a></li>
+  {{ end }}
+</ul>
+{{ end }}
