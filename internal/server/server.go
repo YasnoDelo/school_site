@@ -32,6 +32,25 @@ func findTemplatesDir() string {
 	return ""
 }
 
+// findProjectRoot поднимается от cwd вверх, пока не найдёт папку .git или просто на N уровней
+func findProjectRoot() string {
+	cwd, err := os.Getwd()
+	if err != nil {
+		log.Fatalf("cannot get cwd: %v", err)
+	}
+	// пробуем найти папку data рядом с internal, либо поднимаемся N раз
+	dir := cwd
+	for i := 0; i < 4; i++ {
+		cand := filepath.Join(dir, "data")
+		if info, err := os.Stat(cand); err == nil && info.IsDir() {
+			return dir
+		}
+		dir = filepath.Dir(dir)
+	}
+	log.Fatalf("could not locate project root from %s", cwd)
+	return ""
+}
+
 func NewServerMux(cfg *config.Config, router *mux.Router) http.Handler {
 	// Ищем папку с шаблонами автоматически
 	templatesDir := findTemplatesDir()
@@ -52,6 +71,7 @@ func NewServerMux(cfg *config.Config, router *mux.Router) http.Handler {
 	router.HandleFunc("/", handlers.Home).Methods("GET")
 	router.HandleFunc("/courses", handlers.Courses).Methods("GET")
 	router.HandleFunc("/materials", handlers.Materials).Methods("GET")
+	router.HandleFunc("/homework", handlers.Homework).Methods("GET", "POST")
 
 	return router
 }
