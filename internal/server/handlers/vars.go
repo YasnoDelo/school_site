@@ -1,4 +1,7 @@
 package handlers
 
-// TemplatesDir будет установлена из server.NewServerMux
-var TemplatesDir string
+// эти переменные устанавливаются из server.NewServerMux
+var (
+	TemplatesDir string
+	DataDir      string
+)

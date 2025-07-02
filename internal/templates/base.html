@@ -1,16 +1,35 @@
 {{ define "base" }}
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="/static/css/main.css">
-  <title>Online School</title>
+  <meta charset="UTF-8">
+  <title>My Go Homework</title>
+
+  <!-- MathJax-конфигурация -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        // можно добавить свои макросы
+        macros: {
+          RR: "\\mathbb{R}"
+        }
+      },
+      options: {
+        skipHtmlTags: ['script','noscript','style','textarea','pre']
+      }
+    };
+  </script>
+  <!-- Сам движок MathJax -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
 </head>
 <body>
   <nav>
     <a href="/">Home</a> |
     <a href="/courses">Courses</a> |
-    <a href="/materials">Materials</a>
+    <a href="/materials">Materials</a> |
+    <a href="/homework">Homework</a>
   </nav>
   <hr>
   {{ template "content" . }}

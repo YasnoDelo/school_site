@@ -1,23 +1,22 @@
 {{ define "content" }}
-<h1>Домашнее задание</h1>
-<form method="POST" action="/homework">
+<h1>Homework</h1>
+<form method="POST">
   {{ range .Tasks }}
-  <div>
-    <p><strong>Задача {{ .ID }}:</strong></p>
-    <p>$$ {{ .Question }} $$</p>
-    <input type="text" name="answer_{{ .ID }}" placeholder="Ваш ответ">
-    {{ if $.Results }}
-      {{ if index $.Results .ID }}
-        <span style="color:green">✓</span>
-      {{ else }}
-        <span style="color:red">✗</span>
+    <div>
+      <p><strong>Task {{ .ID }}:</strong></p>
+      <!-- здесь теперь чистый LaTeX -->
+      <div>{{ .Question }}</div>
+      <input type="text" name="answer_{{ .ID }}" placeholder="Your answer">
+      {{ if $.Results }}
+        {{ if index $.Results .ID }}
+          <span style="color:green">✓</span>
+        {{ else }}
+          <span style="color:red">✗</span>
+        {{ end }}
       {{ end }}
-    {{ end }}
-  </div>
-  <hr>
+    </div>
+    <hr>
   {{ end }}
-  <button type="submit">Проверить</button>
+  <button type="submit">Check</button>
 </form>
-<!-- MathJax -->
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 {{ end }}

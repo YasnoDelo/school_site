@@ -1,12 +1,12 @@
 [
   {
     "id": 1,
-    "question": "Решите уравнение: $$x^2 - 5x + 6 = 0$$",
+    "question": "\\displaystyle x^2 - 5x + 6 = 0",
     "answer": "2,3"
   },
   {
     "id": 2,
-    "question": "Вычислите интеграл: $$\\\\int _0^1 x^2\\\\,dx$$",
+    "question": "\\displaystyle \\int_0^1 x^2\\,dx",
     "answer": "1/3"
   }
 ]

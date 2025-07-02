@@ -11,23 +11,21 @@ import (
 
 type rawTask struct {
 	ID       int    `json:"id"`
-	Question string `json:"question"`
+	Question string `json:"question"` // LaTeX-код
 	Answer   string `json:"answer"`
 }
 
 type Task struct {
 	ID       int
-	Question template.HTML
+	Question template.HTML // теперь здесь будем хранить LaTeX
 	Answer   string
 }
 
-// ViewData передаётся в шаблон: список задач и (опционально) результаты
 type ViewData struct {
 	Tasks   []Task
 	Results map[int]bool
 }
 
-// findProjectRoot ищет папку data, поднимаясь вверх
 func findProjectRoot() string {
 	cwd, err := os.Getwd()
 	if err != nil {
@@ -54,24 +52,26 @@ func Homework(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	// 2) Парсим JSON в промежуточную структуру rawTask
+	// 2) Парсим JSON
 	var raw []rawTask
 	if err := json.NewDecoder(file).Decode(&raw); err != nil {
 		http.Error(w, "Invalid tasks format: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	// 3) Конвертируем rawTask → Task (с template.HTML для LaTeX)
+	// 3) Рендерим LaTeX → SVG
 	tasks := make([]Task, len(raw))
 	for i, t := range raw {
+		// оборачиваем LaTeX в блочный MathJax‑делимитер
+		tex := fmt.Sprintf("$$%s$$", t.Question)
 		tasks[i] = Task{
 			ID:       t.ID,
-			Question: template.HTML(t.Question),
+			Question: template.HTML(tex),
 			Answer:   t.Answer,
 		}
 	}
 
-	// 4) Собираем данные для шаблона, обрабатываем POST‑ответы
+	// 4) Обработка POST‑ответов
 	data := ViewData{Tasks: tasks}
 	if r.Method == http.MethodPost {
 		if err := r.ParseForm(); err != nil {
@@ -86,9 +86,9 @@ func Homework(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// 5) Рендерим шаблон
-	basePath := filepath.Join(TemplatesDir, "base.html")
-	hwPath := filepath.Join(TemplatesDir, "homework.html")
-	tmpl := template.Must(template.ParseFiles(basePath, hwPath))
+	base := filepath.Join(TemplatesDir, "base.html")
+	hw := filepath.Join(TemplatesDir, "homework.html")
+	tmpl := template.Must(template.ParseFiles(base, hw))
 	if err := tmpl.ExecuteTemplate(w, "base", data); err != nil {
 		http.Error(w, "Template render error: "+err.Error(), http.StatusInternalServerError)
 	}

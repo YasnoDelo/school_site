@@ -4,3 +4,5 @@ github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
 github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
 github.com/kelseyhightower/envconfig v1.4.0 h1:Im6hONhd3pLkfDFsbRgu68RDNkGF1r3dvMUtDTo2cv8=
 github.com/kelseyhightower/envconfig v1.4.0/go.mod h1:cccZRl6mQpaq41TPp5QxidR+Sa3axMbJDNb//FQX6Gg=
+github.com/rwestlund/gotex v0.0.0-20170412080108-3c68d9bfff3b h1:8h8zM6cvKacR9ytPSs1k0BGfUsXeOdEu+by82F1ooHY=
+github.com/rwestlund/gotex v0.0.0-20170412080108-3c68d9bfff3b/go.mod h1:eMwKfukmxmiMHwKmz8LHWprZSVlzcHBGy2TSb+pBcDg=

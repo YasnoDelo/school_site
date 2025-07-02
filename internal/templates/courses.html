@@ -2,7 +2,8 @@
 <h1>{{ .Title }}</h1>
 <ul>
   {{ range .Courses }}
-    <li>{{ . }}</li>
+  <li><a href="{{ .URL }}">{{ .Name }}</a></li>
   {{ end }}
 </ul>
 {{ end }}
+
