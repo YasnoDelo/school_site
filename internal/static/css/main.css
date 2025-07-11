@@ -1,2 +1,4 @@
 body { font-family: sans-serif; margin: 20px; }
 nav a { margin-right: 10px; }
+.gallery { display: flex; flex-wrap: wrap; gap: 10px; }
+.thumb { width: 150px; height: auto; border-radius: 4px; }

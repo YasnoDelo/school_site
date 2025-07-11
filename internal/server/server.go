@@ -66,12 +66,15 @@ func NewServerMux(cfg *config.Config, router *mux.Router) http.Handler {
 	router.
 		PathPrefix("/img/").
 		Handler(http.StripPrefix("/img/", http.FileServer(http.Dir("img"))))
+	router.PathPrefix("/static/").
+		Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	// Роуты
 	router.HandleFunc("/", handlers.Home).Methods("GET")
 	router.HandleFunc("/courses", handlers.Courses).Methods("GET")
 	router.HandleFunc("/materials", handlers.Materials).Methods("GET")
 	router.HandleFunc("/homework", handlers.Homework).Methods("GET", "POST")
+	router.HandleFunc("/gallery", handlers.Gallery).Methods("GET")
 
 	return router
 }

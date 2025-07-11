@@ -1,0 +1,13 @@
+{{ define "content" }}
+<h1>Photo Gallery</h1>
+<div class="gallery">
+  {{ range .Images }}
+    <a href="{{ . }}" data-lightbox="gallery">
+      <img src="{{ . }}" alt="Photo" class="thumb"/>
+    </a>
+  {{ end }}
+</div>
+<!-- Подключение lightbox.js -->
+<link href="/static/css/lightbox.css" rel="stylesheet">
+<script src="/static/js/lightbox.js"></script>
+{{ end }}
