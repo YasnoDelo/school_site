@@ -1,14 +1,19 @@
 package server
 
 import (
+	"database/sql"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 
+	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
+	_ "github.com/lib/pq"
+
 	"github.com/YasnoDelo/school_site/internal/server/config"
 	"github.com/YasnoDelo/school_site/internal/server/handlers"
-	"github.com/gorilla/mux"
+	"github.com/YasnoDelo/school_site/internal/server/middleware"
 )
 
 // findTemplatesDir пытается найти папку internal/templates,
@@ -32,65 +37,71 @@ func findTemplatesDir() string {
 	return ""
 }
 
-// findProjectRoot поднимается от cwd вверх, пока не найдёт папку .git или просто на N уровней
-func findProjectRoot() string {
-	cwd, err := os.Getwd()
-	if err != nil {
-		log.Fatalf("cannot get cwd: %v", err)
-	}
-	// пробуем найти папку data рядом с internal, либо поднимаемся N раз
-	dir := cwd
-	for i := 0; i < 4; i++ {
-		cand := filepath.Join(dir, "data")
-		if info, err := os.Stat(cand); err == nil && info.IsDir() {
-			return dir
-		}
-		dir = filepath.Dir(dir)
-	}
-	log.Fatalf("could not locate project root from %s", cwd)
-	return ""
-}
-
-func NewServerMux(cfg *config.Config, router *mux.Router) http.Handler {
-	// Ищем папку с шаблонами автоматически
+// NewServerMux настраивает всё: БД, миграции, сессии, роуты и middleware.
+func NewServerMux(cfg *config.Config) http.Handler {
 	templatesDir := findTemplatesDir()
 	handlers.TemplatesDir = templatesDir
 
-	// Middleware
-	router.Use(loggingMiddleware)
+	// 1) Подключаемся к Postgres
+	db, err := sql.Open("postgres", cfg.DatabaseDSN)
+	if err != nil {
+		log.Fatalf("DB open error: %v", err)
+	}
+	if err := db.Ping(); err != nil {
+		log.Fatalf("DB ping error: %v", err)
+	}
 
-	// Статика
-	router.
-		PathPrefix("/static/").
+	// 2) Прогоняем миграции
+	RunMigrations(db)
+
+	// 3) Сохраняем handle на БД в пакет handlers
+	handlers.DB = db
+
+	// 4) Настраиваем Cookie‑сессии
+	store := sessions.NewCookieStore([]byte(cfg.SessionKey))
+	store.Options = &sessions.Options{
+		Path:     "/",
+		MaxAge:   86400 * 7,
+		HttpOnly: true,
+		Secure:   cfg.Env == "production",
+	}
+	handlers.SessionStore = store
+
+	// 5) Создаём router
+	r := mux.NewRouter()
+
+	// 6) Общие middleware
+	r.Use(loggingMiddleware)
+
+	// 7) Отдача статических файлов
+	//    Папка static/ лежит в корне проекта
+	r.PathPrefix("/static/").
 		Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-	router.
-		PathPrefix("/img/").
+	r.PathPrefix("/img/").
 		Handler(http.StripPrefix("/img/", http.FileServer(http.Dir("img"))))
-	router.PathPrefix("/static/").
-		Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
-	// Роуты
-	router.HandleFunc("/", handlers.Home).Methods("GET")
-	router.HandleFunc("/courses", handlers.Courses).Methods("GET")
-	router.HandleFunc("/materials", handlers.Materials).Methods("GET")
-	router.HandleFunc("/homework", handlers.Homework).Methods("GET", "POST")
-	router.HandleFunc("/gallery", handlers.Gallery).Methods("GET")
-	router.HandleFunc("/video", handlers.VideoPage).Methods("GET")
+	// 8) Публичные маршруты
+	r.HandleFunc("/", handlers.Home).Methods("GET")
+	r.HandleFunc("/materials", handlers.Materials).Methods("GET")
+	r.HandleFunc("/homework", handlers.Homework).Methods("GET", "POST")
+	r.HandleFunc("/gallery", handlers.Gallery).Methods("GET")
+	r.HandleFunc("/video", handlers.VideoPage).Methods("GET")
+	r.HandleFunc("/signup", handlers.SignUp).Methods("GET", "POST")
+	r.HandleFunc("/login", handlers.Login).Methods("GET", "POST")
+	r.HandleFunc("/logout", handlers.Logout).Methods("POST")
 
-	router.Use(func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			log.Printf("[REQUEST] %s %s\n", r.Method, r.RequestURI)
-			next.ServeHTTP(w, r)
-		})
-	})
+	// 9) Защищённые маршруты
+	r.Handle("/courses",
+		middleware.AuthRequired(http.HandlerFunc(handlers.Courses)),
+	).Methods("GET")
 
-	return router
+	return r
 }
 
-// loggingMiddleware — простой логер
+// loggingMiddleware — простой лог запросов
 func loggingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("[%s] %s", r.Method, r.RequestURI)
+		log.Printf("[REQUEST] %s %s", r.Method, r.RequestURI)
 		next.ServeHTTP(w, r)
 	})
 }

@@ -2,9 +2,9 @@ package config
 
 import (
 	"log"
+	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/kelseyhightower/envconfig"
 )
 
 type Config struct {
@@ -15,12 +15,13 @@ type Config struct {
 }
 
 func Load() *Config {
-	// Загружаем .env, если он есть (dev‑среда)
 	_ = godotenv.Load()
+	log.Println("Raw DB_URL:", os.Getenv("DB_URL"))
 
-	var cfg Config
-	if err := envconfig.Process("", &cfg); err != nil {
-		log.Fatalf("Failed to parse env: %v", err)
+	return &Config{
+		Port:        os.Getenv("PORT"),
+		Env:         os.Getenv("ENV"),
+		DatabaseDSN: os.Getenv("DB_URL"),
+		SessionKey:  os.Getenv("SESSION_KEY"),
 	}
-	return &cfg
 }

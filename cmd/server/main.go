@@ -6,21 +6,17 @@ import (
 
 	"github.com/YasnoDelo/school_site/internal/server"
 	"github.com/YasnoDelo/school_site/internal/server/config"
-	"github.com/gorilla/mux"
 )
 
 func main() {
-	// 1. Загрузка конфигурации (.env или OS‑env)
+	// 1. Загружаем конфиг (.env или OS‑env)
 	cfg := config.Load()
+	log.Println("DatabaseDSN:", cfg.DatabaseDSN)
 
-	// 2. Создаем Gorilla Mux
-	router := mux.NewRouter()
+	// 2. Создаём весь сервер (DB, миграции, сессии, маршруты и т.д.)
+	handler := server.NewServerMux(cfg)
 
-	// 3. Передаем router и cfg в NewServerMux,
-	//    который внутри настроит статику, middleware и хендлеры
-	handler := server.NewServerMux(cfg, router)
-
-	// 4. Запускаем HTTP‑сервер
+	// 3. Запускаем HTTP‑сервер
 	addr := ":" + cfg.Port
 	log.Printf("Starting server on %s (env=%s)", addr, cfg.Env)
 	log.Fatal(http.ListenAndServe(addr, handler))
