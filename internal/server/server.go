@@ -75,6 +75,14 @@ func NewServerMux(cfg *config.Config, router *mux.Router) http.Handler {
 	router.HandleFunc("/materials", handlers.Materials).Methods("GET")
 	router.HandleFunc("/homework", handlers.Homework).Methods("GET", "POST")
 	router.HandleFunc("/gallery", handlers.Gallery).Methods("GET")
+	router.HandleFunc("/video", handlers.VideoPage).Methods("GET")
+
+	router.Use(func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			log.Printf("[REQUEST] %s %s\n", r.Method, r.RequestURI)
+			next.ServeHTTP(w, r)
+		})
+	})
 
 	return router
 }

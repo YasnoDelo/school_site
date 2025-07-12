@@ -1,0 +1,15 @@
+body { font-family: sans-serif; margin: 20px; }
+nav a { margin-right: 10px; }
+.gallery { display: flex; flex-wrap: wrap; gap: 10px; }
+.thumb { width: 150px; height: auto; border-radius: 4px; }
+.video-list ul {
+    list-style: none;
+    padding: 0;
+  }
+  .video-list li {
+    margin: 5px 0;
+  }
+  #player-container {
+    margin-top: 20px;
+  }
+  

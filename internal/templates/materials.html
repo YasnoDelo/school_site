@@ -1,6 +1,9 @@
 {{ define "content" }}
 <h1>{{ .Title }}</h1>
 <ul>
+  Все материалы делятся на методички и брошюры
+    <li><a href="/materials/bro">Короткие брошюры</a></li>
+    <li><a href="/courses/method">Некороткие методички</a></li>
   {{ range .FileNames }}
     <li><a href="/{{ . }}">{{ . | html }}</a></li>
   {{ end }}

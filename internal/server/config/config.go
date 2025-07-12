@@ -8,10 +8,10 @@ import (
 )
 
 type Config struct {
-	Port      string `env:"PORT" default:"8080"`
-	Env       string `env:"ENV" default:"production"`
-	Database  string `env:"DB_URL,required"`
-	StripeKey string `env:"STRIPE_KEY"`
+	Port        string `env:"PORT" default:"8080"`
+	Env         string `env:"ENV" default:"development"`
+	DatabaseDSN string `env:"DB_URL,required"`
+	SessionKey  string `env:"SESSION_KEY,required"`
 }
 
 func Load() *Config {
