@@ -1,0 +1,8 @@
+.courses-list { list-style:none; padding:0; }
+.courses-list li {
+  padding: .75rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.courses-list li:nth-child(odd) { background: #fbfbfb; }
+.courses-list li a { text-decoration:none; color: var(--primary); }

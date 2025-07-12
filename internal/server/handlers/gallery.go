@@ -1,51 +1,35 @@
+// internal/server/handlers/gallery.go
 package handlers
 
 import (
-	"html/template"
-	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/YasnoDelo/school_site/internal/server/util"
 )
 
 type GalleryData struct {
-	Title  string
 	Images []string
 }
 
 func Gallery(w http.ResponseWriter, r *http.Request) {
-	projectRoot := util.FindProjectRoot()
+	dir, _ := os.Getwd()
+	for i := 0; i < 4; i++ {
+		if _, err := os.Stat(filepath.Join(dir, "static", "images", "gallery")); err == nil {
+			break
+		}
+		dir = filepath.Dir(dir)
+	}
 
-	baseTmpl := filepath.Join(TemplatesDir, "base.html")
-	galleryTmpl := filepath.Join(TemplatesDir, "gallery.html")
-	tmpl, err := template.ParseFiles(baseTmpl, galleryTmpl)
+	matches, err := filepath.Glob(filepath.Join(dir, "static", "images", "gallery", "*"))
 	if err != nil {
-		http.Error(w, "Error loading templates: "+err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Cannot read gallery: "+err.Error(), 500)
 		return
 	}
-
-	globPath := filepath.Join(projectRoot, "static", "images", "gallery", "*")
-	files, err := filepath.Glob(globPath)
-	if err != nil {
-		http.Error(w, "Cannot read gallery folder: "+err.Error(), http.StatusInternalServerError)
-		return
+	var imgs []string
+	for _, p := range matches {
+		rel := strings.TrimPrefix(p, dir)
+		imgs = append(imgs, filepath.ToSlash(rel))
 	}
-
-	var images []string
-	for _, f := range files {
-		rel := strings.TrimPrefix(f, projectRoot)
-		rel = filepath.ToSlash(rel)
-		images = append(images, rel)
-	}
-
-	data := GalleryData{
-		Title:  "Галерея",
-		Images: images,
-	}
-	if err := tmpl.ExecuteTemplate(w, "base", data); err != nil {
-		log.Printf("gallery tmpl exec error: %v", err)
-		http.Error(w, "Error rendering gallery", http.StatusInternalServerError)
-	}
+	render(w, r, "gallery", "Галерея", GalleryData{Images: imgs})
 }

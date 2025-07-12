@@ -1,9 +1,7 @@
 package handlers
 
 import (
-	"html/template"
 	"net/http"
-	"path/filepath"
 )
 
 type Course struct {
@@ -17,10 +15,7 @@ type CoursesPageData struct {
 	Courses []Course
 }
 
-func Courses(w http.ResponseWriter, r *http.Request) {
-	basePath := filepath.Join(TemplatesDir, "base.html")
-	coursesPath := filepath.Join(TemplatesDir, "courses.html")
-
+func Courses1(w http.ResponseWriter, r *http.Request) {
 	data := CoursesPageData{
 		Title: "Наши курсы",
 		Courses: []Course{
@@ -29,8 +24,29 @@ func Courses(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	tmpl := template.Must(template.ParseFiles(basePath, coursesPath))
-	if err := tmpl.ExecuteTemplate(w, "base", data); err != nil {
-		http.Error(w, "Template exec error: "+err.Error(), http.StatusInternalServerError)
+	render(w, r, "courses1", "Курсы1", data)
+}
+
+func Courses2(w http.ResponseWriter, r *http.Request) {
+	data := CoursesPageData{
+		Title: "Наши курсы",
+		Courses: []Course{
+			{ID: 1, Name: "Math", URL: "/courses/1"},
+			{ID: 2, Name: "Physics", URL: "/courses/2"},
+		},
 	}
+
+	render(w, r, "courses2", "Курсы2", data)
+}
+
+func Courses3(w http.ResponseWriter, r *http.Request) {
+	data := CoursesPageData{
+		Title: "Наши курсы",
+		Courses: []Course{
+			{ID: 1, Name: "Math", URL: "/courses/1"},
+			{ID: 2, Name: "Physics", URL: "/courses/2"},
+		},
+	}
+
+	render(w, r, "courses3", "Курсы3", data)
 }

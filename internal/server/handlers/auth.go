@@ -1,84 +1,80 @@
+// internal/server/handlers/auth.go
 package handlers
 
 import (
-	"html/template"
 	"net/http"
-	"path/filepath"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
-// User — модель для примера
-type User struct {
-	ID       int
-	Username string
-	Password string // хранится bcrypt-хеш
+// Register
+type RegisterForm struct {
+	Error string
 }
 
-// renderTemplate — удобная функция
-func render(w http.ResponseWriter, name string, data interface{}) {
-	base := filepath.Join(TemplatesDir, "base.html")
-	tpl := filepath.Join(TemplatesDir, name+".html")
-	tmpl := template.Must(template.ParseFiles(base, tpl))
-	tmpl.ExecuteTemplate(w, "base", data)
+func RegisterPage(w http.ResponseWriter, r *http.Request) {
+	render(w, r, "register", "Регистрация", RegisterForm{})
 }
 
-// SignUp — регистрация
-func SignUp(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
-		render(w, "signup", nil)
-		return
-	}
-	// POST
+func RegisterPost(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
-	// хешируем
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	hash, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	_, err := DB.Exec(
+		"INSERT INTO users (username, password) VALUES ($1,$2)",
+		username, string(hash),
+	)
 	if err != nil {
-		http.Error(w, "Server error", 500)
-		return
-	}
-	// сохраняем в БД
-	_, err = DB.Exec("INSERT INTO users (username, password) VALUES ($1, $2)", username, string(hash))
-	if err != nil {
-		http.Error(w, "DB error", 500)
+		render(w, r, "register", "Регистрация", RegisterForm{Error: "User exists or DB error"})
 		return
 	}
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
 
-// Login — вход
-func Login(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
-		render(w, "login", nil)
-		return
-	}
-	username := r.FormValue("username")
-	password := r.FormValue("password")
-	// ищем в БД
-	var user User
-	err := DB.QueryRow("SELECT id, password FROM users WHERE username=$1", username).
-		Scan(&user.ID, &user.Password)
-	if err != nil {
-		http.Error(w, "Invalid credentials", 401)
-		return
-	}
-	// сравниваем хеш
-	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)) != nil {
-		http.Error(w, "Invalid credentials", 401)
-		return
-	}
-	// создаём сессию
-	sess, _ := SessionStore.Get(r, "session-name")
-	sess.Values["user_id"] = user.ID
-	sess.Save(r, w)
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+// Login
+type LoginForm struct {
+	Error string
 }
 
-// Logout — выход
+func LoginPage(w http.ResponseWriter, r *http.Request) {
+	render(w, r, "login", "Вход", LoginForm{})
+}
+
+func LoginPost(w http.ResponseWriter, r *http.Request) {
+	username := r.FormValue("username")
+	password := r.FormValue("password")
+
+	var id int
+	var hash string
+	err := DB.QueryRow(
+		"SELECT id, password FROM users WHERE username=$1",
+		username,
+	).Scan(&id, &hash)
+	if err != nil || bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)) != nil {
+		render(w, r, "login", "Вход", LoginForm{Error: "Invalid credentials"})
+		return
+	}
+
+	sess, _ := SessionStore.Get(r, "session-name")
+	sess.Values["user_id"] = id
+	sess.Save(r, w)
+	http.Redirect(w, r, "/profile", http.StatusSeeOther)
+}
+
 func Logout(w http.ResponseWriter, r *http.Request) {
 	sess, _ := SessionStore.Get(r, "session-name")
 	delete(sess.Values, "user_id")
-	sess.Save(r, w)
+	// Просим браузер удалять cookie сразу
+	sess.Options.MaxAge = -1
+	// Записываем заголовок Set-Cookie
+	if err := sess.Save(r, w); err != nil {
+		http.Error(w, "Logout error", http.StatusInternalServerError)
+		return
+	}
 	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+// Profile
+func ProfilePage(w http.ResponseWriter, r *http.Request) {
+	render(w, r, "profile", "Личный кабинет", nil)
 }

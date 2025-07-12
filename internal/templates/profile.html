@@ -1,0 +1,9 @@
+<!-- internal/templates/profile.html -->
+{{ define "content" }}
+<h2>Личный кабинет</h2>
+<p>Вы вошли как <strong>{{ .Username }}</strong>.</p>
+
+<form method="POST" action="/logout">
+  <button type="submit">Выйти</button>
+</form>
+{{ end }}

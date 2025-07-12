@@ -1,3 +1,4 @@
+// internal/server/handlers/homework.go
 package handlers
 
 import (
@@ -7,6 +8,8 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+
+	"github.com/YasnoDelo/school_site/internal/server/util"
 )
 
 type rawTask struct {
@@ -17,33 +20,18 @@ type rawTask struct {
 
 type Task struct {
 	ID       int
-	Question template.HTML // теперь здесь будем хранить LaTeX
+	Question template.HTML
 	Answer   string
 }
 
-type ViewData struct {
+type HomeworkData struct {
 	Tasks   []Task
 	Results map[int]bool
 }
 
-func findProjectRoot() string {
-	cwd, err := os.Getwd()
-	if err != nil {
-		panic("cannot get cwd: " + err.Error())
-	}
-	dir := cwd
-	for i := 0; i < 4; i++ {
-		if fi, err := os.Stat(filepath.Join(dir, "data")); err == nil && fi.IsDir() {
-			return dir
-		}
-		dir = filepath.Dir(dir)
-	}
-	panic("project root not found from " + cwd)
-}
-
 func Homework(w http.ResponseWriter, r *http.Request) {
 	// 1) Открываем JSON с задачами
-	projectRoot := findProjectRoot()
+	projectRoot := util.FindProjectRoot()
 	dataPath := filepath.Join(projectRoot, "data", "homework.json")
 	file, err := os.Open(dataPath)
 	if err != nil {
@@ -72,7 +60,7 @@ func Homework(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// 4) Обработка POST‑ответов
-	data := ViewData{Tasks: tasks}
+	data := HomeworkData{Tasks: tasks}
 	if r.Method == http.MethodPost {
 		if err := r.ParseForm(); err != nil {
 			http.Error(w, "Cannot parse form: "+err.Error(), http.StatusBadRequest)
@@ -85,11 +73,5 @@ func Homework(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// 5) Рендерим шаблон
-	base := filepath.Join(TemplatesDir, "base.html")
-	hw := filepath.Join(TemplatesDir, "homework.html")
-	tmpl := template.Must(template.ParseFiles(base, hw))
-	if err := tmpl.ExecuteTemplate(w, "base", data); err != nil {
-		http.Error(w, "Template render error: "+err.Error(), http.StatusInternalServerError)
-	}
+	render(w, r, "homework", "Домашние задания", data)
 }

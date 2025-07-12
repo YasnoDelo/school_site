@@ -1,17 +1,12 @@
+// internal/server/handlers/materials.go
 package handlers
 
-import (
-	"html/template"
-	"net/http"
-	"path/filepath"
-)
+import "net/http"
+
+type MaterialsData struct {
+	Files []string
+}
 
 func Materials(w http.ResponseWriter, r *http.Request) {
-	basePath := filepath.Join(TemplatesDir, "base.html")
-	materialsPath := filepath.Join(TemplatesDir, "materials.html")
-
-	tmpl := template.Must(template.ParseFiles(basePath, materialsPath))
-	if err := tmpl.ExecuteTemplate(w, "base", nil); err != nil {
-		http.Error(w, "Template exec error: "+err.Error(), http.StatusInternalServerError)
-	}
+	render(w, r, "materials", "Материалы", nil)
 }

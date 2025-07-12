@@ -1,27 +1,13 @@
+// internal/server/handlers/video.go
 package handlers
 
-import (
-	"html/template"
-	"net/http"
-	"path/filepath"
-)
+import "net/http"
 
-// VideoPageData — данные, которые передаются в шаблон
-type VideoPageData struct {
-	VideoURL string // URL до видеофайла
+type VideoData struct {
+	VideoURL string
 }
 
 func VideoPage(w http.ResponseWriter, r *http.Request) {
-	// Формируем URL к видео (относительно корня сайта)
-	data := VideoPageData{
-		VideoURL: "/static/videos/lesson1.mp4",
-	}
-
-	// Рендерим шаблоны: base.html + video.html
-	base := filepath.Join(TemplatesDir, "base.html")
-	vid := filepath.Join(TemplatesDir, "video.html")
-	tmpl := template.Must(template.ParseFiles(base, vid))
-
-	// Выполняем рендеринг, передаём data
-	tmpl.ExecuteTemplate(w, "base", data)
+	data := VideoData{VideoURL: "/static/videos/lesson1.mp4"}
+	render(w, r, "video", "Видеоурок", data)
 }

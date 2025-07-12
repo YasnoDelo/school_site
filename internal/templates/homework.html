@@ -1,13 +1,13 @@
 {{ define "content" }}
 <h1>Homework</h1>
 <form method="POST">
-  {{ range .Tasks }}
+  {{ range .Data.Tasks }}
     <div>
       <p><strong>Task {{ .ID }}:</strong></p>
       <!-- здесь теперь чистый LaTeX -->
       <div>{{ .Question }}</div>
       <input type="text" name="answer_{{ .ID }}" placeholder="Your answer">
-      {{ if $.Results }}
+      {{ if $.Data.Results }}
         {{ if index $.Results .ID }}
           <span style="color:green">✓</span>
         {{ else }}

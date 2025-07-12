@@ -86,13 +86,25 @@ func NewServerMux(cfg *config.Config) http.Handler {
 	r.HandleFunc("/homework", handlers.Homework).Methods("GET", "POST")
 	r.HandleFunc("/gallery", handlers.Gallery).Methods("GET")
 	r.HandleFunc("/video", handlers.VideoPage).Methods("GET")
-	r.HandleFunc("/signup", handlers.SignUp).Methods("GET", "POST")
-	r.HandleFunc("/login", handlers.Login).Methods("GET", "POST")
+	r.HandleFunc("/register", handlers.RegisterPage).Methods("GET")
+	r.HandleFunc("/register", handlers.RegisterPost).Methods("POST")
+	r.HandleFunc("/login", handlers.LoginPage).Methods("GET")
+	r.HandleFunc("/login", handlers.LoginPost).Methods("POST")
 	r.HandleFunc("/logout", handlers.Logout).Methods("POST")
 
 	// 9) Защищённые маршруты
-	r.Handle("/courses",
-		middleware.AuthRequired(http.HandlerFunc(handlers.Courses)),
+	r.Handle("/courses1",
+		middleware.AuthRequired(http.HandlerFunc(handlers.Courses1)),
+	).Methods("GET")
+	r.Handle("/courses2",
+		middleware.AuthRequired(http.HandlerFunc(handlers.Courses2)),
+	).Methods("GET")
+	r.Handle("/courses3",
+		middleware.AuthRequired(http.HandlerFunc(handlers.Courses3)),
+	).Methods("GET")
+
+	r.Handle("/profile",
+		middleware.AuthRequired(http.HandlerFunc(handlers.ProfilePage)),
 	).Methods("GET")
 
 	return r

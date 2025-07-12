@@ -1,7 +1,10 @@
+{{ define "head" }}
+  <link rel="stylesheet" href="/static/css/courses.css">
+{{ end }}
 {{ define "content" }}
 <h1>{{ .Title }}</h1>
 <ul>
-  {{ range .Courses }}
+  {{ range .Data.Courses }}
   <li><a href="{{ .URL }}">{{ .Name }}</a></li>
   {{ end }}
 </ul>
