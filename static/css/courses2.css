@@ -1,8 +1,37 @@
-.courses-list { list-style:none; padding:0; }
-.courses-list li {
-  padding: .75rem 1rem;
-  border-bottom: 1px solid #e0e0e0;
-  display: flex; justify-content: space-between; align-items: center;
+/* Сбросим маркеры и отступы у списка */
+.courses-list {
+  list-style: none;   /* убираем точки */
+  padding: 0;         /* обнуляем внутренний отступ */
+  margin: 2rem auto;  /* отступы сверху/снизу, центрирование */
+  max-width: 800px;   /* ограничиваем ширину */
 }
-.courses-list li:nth-child(odd) { background: #fbfbfb; }
-.courses-list li a { text-decoration:none; color: var(--primary); }
+
+/* Каждый элемент списка — flex‑контейнер */
+.courses-list li {
+  display: flex;                      /* ставим контент и ссылку в одну строку */
+  justify-content: space-between;     /* растягиваем пробел между блоками */
+  align-items: center;                /* выравниваем по центру по вертикали */
+  padding: 0.75rem 1rem;              /* внутренние отступы */
+  border-bottom: 1px solid #e0e0e0;   /* разделитель между элементами */
+}
+
+/* Чередующиеся фоны строк */
+.courses-list li:nth-child(odd) {
+  background: #fbfbfb;
+}
+
+/* Ссылка открытия курса */
+.courses-list li a {
+  text-decoration: none;  /* без подчёркивания */
+  color: #2a9d8f;         /* акцентный цвет */
+  padding: 0.5rem 0.75rem;/* делаем ссылку похожей на кнопку */
+  border: 1px solid #2a9d8f;
+  border-radius: 4px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* Ховер‑эффект на ссылке */
+.courses-list li a:hover {
+  background: #2a9d8f;
+  color: #ffffff;
+}

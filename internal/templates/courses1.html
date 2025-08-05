@@ -1,13 +1,13 @@
 {{ define "head" }}
-<link rel="stylesheet" href="/static/css/courses.css">
+<link rel="stylesheet" href="/static/css/courses1.css">
 {{ end }}
 {{ define "content" }}
 <div class="container courses-container">
   {{ range .Data.Courses }}
   <div class="course-card">
-    <h3>{{ . }}</h3>
+    <h3>{{ .Name }}</h3>
     <p>Краткое описание курса…</p>
-    <a class="btn btn-primary" href="/courses/{{ . | urlquery }}">Перейти</a>
+    <a class="btn btn-primary" href="{{ .URL }}">Перейти</a>
   </div>
   {{ end }}
 </div>

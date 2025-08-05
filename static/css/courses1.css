@@ -1,14 +1,43 @@
-.courses-container { display: grid; grid-template-columns: repeat(3,1fr); gap:1rem; }
+/* Сама сетка карточек */
+.courses-container {
+  display: grid;                         /* включаем CSS Grid */
+  grid-template-columns: repeat(3, 1fr); /* 3 колонки одинаковой ширины */
+  gap: 1rem;                             /* отступы между строками и колонками */
+  margin: 2rem auto;                     /* немного отступа сверху/снизу, центрирование */
+  max-width: 1200px;                     /* ограничиваем ширину контейнера */
+  padding: 0 1rem;                       /* внутренние отступы по бокам */
+}
+
+/* Общий вид карточки */
 .course-card {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 1rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  transition: transform .2s, box-shadow .2s;
+  background: #ffffff;                              /* белый фон */
+  border: 1px solid #dddddd;                        /* светло‑серая рамка */
+  border-radius: 6px;                               /* скруглённые углы */
+  padding: 1rem;                                    /* внутренний отступ */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);        /* лёгкая тень */
+  transition: transform 0.2s ease, box-shadow 0.2s ease; /* плавная анимация */
 }
+
+/* Эффект при наведении */
 .course-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-4px);                   /* сдвиг вверх */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);     /* усиленная тень */
 }
-.course-card h3 { margin-top:0; }
+
+/* Заголовок внутри карточки */
+.course-card h3 {
+  margin-top: 0;          /* обнуляем верхний отступ, чтобы выровнять текст */
+  font-size: 1.25rem;     /* чуть больше базового размера */
+  color: #333333;         /* тёмно‑серый цвет текста */
+}
+
+/* Кнопка внутри карточки */
+.course-card .btn-primary {
+  display: inline-block;
+  margin-top: 0.5rem;     /* расстояние от абзаца до кнопки */
+  padding: 0.5rem 1rem;    /* размер кнопки */
+  background: #2a9d8f;     /* основной цвет */
+  color: #ffffff;          /* цвет текста */
+  text-decoration: none;   /* без подчёркивания */
+  border-radius: 4px;      /* скруглённые углы */
+}

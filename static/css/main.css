@@ -1,5 +1,46 @@
 body { font-family: sans-serif; margin: 20px; }
-nav a { margin-right: 10px; }
+/* сам nav — flex‑контейнер */
+.navbar {
+  display: flex;
+  justify-content: space-between; /* Левая группа влево, правая — вправо */
+  align-items: center;            /* Выравниваем по центру по вертикали */
+  padding: 0.5rem 1rem;
+  background: #f8f8f8;
+}
+
+/* левая группа просто строчные ссылки */
+.nav-left a {
+  margin-right: 0.75rem;
+  text-decoration: none;
+  color: #333;
+}
+
+/* правая группа — ссылки и форма */
+.nav-right {
+  display: flex;
+  align-items: center;
+}
+
+/* отступ между «Личный кабинет» и кнопкой */
+.nav-right a,
+.nav-right .logout-form button {
+  margin-left: 1rem;
+  text-decoration: none;
+  color: #333;
+}
+
+/* делаем форму и кнопку в линию без лишних отступов */
+.logout-form {
+  margin: 0;
+}
+.logout-form button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  /* можно добавить свои стили: цвет, паддинги */
+}
+
 .gallery { display: flex; flex-wrap: wrap; gap: 10px; }
 .thumb { width: 150px; height: auto; border-radius: 4px; }
 .video-list ul {

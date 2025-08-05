@@ -1,13 +1,15 @@
 {{ define "head" }}
-<link rel="stylesheet" href="/static/css/courses.css">
+<link rel="stylesheet" href="/static/css/courses2.css">
 {{ end }}
 {{ define "content" }}
 <div class="container">
   <ul class="courses-list">
     {{ range .Data.Courses }}
     <li>
-      <span>{{ . }}</span>
-      <a href="/courses/{{ . | urlquery }}">Открыть</a>
+      <!-- Вот здесь выводим поле Title -->
+      <span>{{ .Name }}</span>
+      <!-- И вот здесь используем поле URL -->
+      <a href="{{ .URL }}">Открыть</a>
     </li>
     {{ end }}
   </ul>
