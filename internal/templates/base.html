@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
   <title>{{ .Title }} — Schooler</title>
 
@@ -23,34 +24,33 @@
   </script>
   <!-- Сам движок MathJax -->
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
+
   {{ block "head" . }}{{ end }}
   <link rel="stylesheet" href="/static/css/main.css">
 </head>
 <body>
-<nav class="navbar">
-  <div class="nav-left">
-    <a href="/">Домой</a> |
-    <a href="/courses3">Курсы</a> |
-    <a href="/materials">Материалы</a> |
-    <a href="/homework">Домашка</a> |
-    <a href="/gallery">Галерея</a> |
-    <a href="/video">Видео</a>
-  </div>
+  <!-- единый навбар для всех страниц -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <a href="/">ЛОГО</a>
+      <a href="/courses1">Курсы</a>
+      <a href="/materials">Материалы</a>
+      <a href="/homework">Задачи</a>
+      <a href="/about">О нас</a>
+    </div>
+    <div class="nav-right">
+      {{ if .IsAuth }}
+        <a href="/profile">Личный кабинет</a>
+        <form method="POST" action="/logout" class="logout-form">
+          <button type="submit">Выйти</button>
+        </form>
+      {{ else }}
+        <a href="/profile">Личный кабинет</a>
+      {{ end }}
+    </div>
+  </nav>
 
-  <div class="nav-right">
-    <a href="/profile">Личный кабинет</a>
-    {{ if .IsAuth }}
-      <form method="POST" action="/logout" class="logout-form">
-        <button type="submit">Выйти</button>
-      </form>
-    {{ else }}
-      <form method="POST" action="/login" class="logout-form">
-        <button type="submit">Войти</button>
-      </form>
-    {{ end }}
-  </div>
-</nav>
-  <hr>
+  <!-- контент страницы -->
   {{ template "content" . }}
 </body>
 </html>

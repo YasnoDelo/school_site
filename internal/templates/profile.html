@@ -1,9 +1,15 @@
-<!-- internal/templates/profile.html -->
-{{ define "content" }}
-<h2>Личный кабинет</h2>
-<p>Вы вошли как <strong>{{ .Username }}</strong>.</p>
+{{ define "head" }}
+  <link rel="stylesheet" href="/static/css/auth.css">
+{{ end }}
 
-<form method="POST" action="/logout">
-  <button type="submit">Выйти</button>
-</form>
+{{ define "content" }}
+<div class="auth-container">
+  <div class="auth-card profile-card">
+    <h2>Добро пожаловать,</h2>
+    <p class="username">{{ .Username }}</p>
+    <form method="POST" action="/logout" class="auth-form">
+      <button type="submit" class="btn-submit">Выйти</button>
+    </form>
+  </div>
+</div>
 {{ end }}

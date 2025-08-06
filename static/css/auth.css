@@ -1,0 +1,89 @@
+/* ОБЩЕЕ ДЛЯ LOGIN, REGISTER, PROFILE */
+
+/* Фоновый контейнер */
+.auth-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 4rem); /* nav высота = 4rem */
+    padding-top: 4rem;              /* чтобы не заезжать под navbar */
+    background: var(--bg);
+  }
+  
+  /* Карточка */
+  .auth-card {
+    background: var(--card-bg);
+    color: var(--fg);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+  }
+  
+  /* Специально для профиля чуть больше отступ снизу */
+  .profile-card {
+    padding-bottom: 2.5rem;
+  }
+  
+  /* Заголовок */
+  .auth-card h2 {
+    margin-bottom: 1rem;
+    font-size: 1.75rem;
+  }
+  
+  /* Имя пользователя */
+  .profile-card .username {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+  }
+  
+  /* Форма и поля */
+  .auth-form {
+    display: flex;
+    flex-direction: column;
+  }
+  .auth-form input {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .btn-submit {
+    background: var(--primary);
+    color: var(--button-fg);   /* в тёмной теме — тоже подхватит #2e2e2e или #fff */
+  }
+  
+  .btn-submit:hover {
+    background: rgba(42,157,143,0.8); /* 80% непрозрачности варианта light */
+  }
+  
+  /* Ошибка */
+  .error {
+    color: #1742c4;
+    margin-bottom: 1rem;
+  }
+  
+  /* Ссылка-переключатель */
+  .switch {
+    margin-top: 1rem;
+  }
+  .switch a {
+    color: var(--primary);
+    text-decoration: none;
+  }
+  
+  /* Тёмная/светлая тема */
+  :root {
+    --card-bg: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --card-bg: #2e2727;
+    }
+  }
+  

@@ -1,6 +1,14 @@
+{{ define "head" }}
+  <link rel="stylesheet" href="/static/css/home.css">
+{{ end }}
+
 {{ define "content" }}
-<h1>Welcome to the Online School</h1>
-<p>Select <a href="/homework">Homework</a> to practice.</p>
-<p>Select <a href="/courses1">Курсы 1 стиля</a></p>
-<p>Select <a href="/courses2">Курсы 2 стиля</a></p>
+<main class="hero">
+  <div class="hero-text">
+    <h1>Добро пожаловать в Schooler</h1>
+    <p>Начните своё путешествие в мир программирования уже сегодня!</p>
+    <a class="btn-primary" href="/courses1">Начать занятие</a>
+  </div>
+  <div class="hero-image"></div>
+</main>
 {{ end }}

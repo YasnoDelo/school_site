@@ -1,60 +1,81 @@
-body { font-family: sans-serif; margin: 20px; }
-/* сам nav — flex‑контейнер */
+/* main.css */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  font-family: sans-serif;
+  scroll-behavior: smooth;
+}
+/* static/css/main.css */
+
+/* 1) Переменные по умолчанию — светлая тема */
+:root {
+  --bg: #faf9f3;           /* светло-слоновая кость */
+  --fg: #2c2c2c;           /* тёмно-серый текст */
+  --primary: #2a9d8f;      /* основной акцент */
+  --nav-bg: rgba(250,249,243,0.9);
+  --card-bg: #ffffff;
+  --button-fg: #ffffff;
+}
+
+/* 2) Тёмная тема */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #2e2e2e;         /* тёмно-серый фон */
+    --fg: #e8e2d2;         /* почти белый текст */
+    --primary: #90caf9;    /* более светлый акцент */
+    --nav-bg: rgba(46,46,46,0.9);
+    --card-bg: #3b3b3b;    /* фон карточек */
+    --button-fg: #2e2e2e;  /* текст на кнопках */
+  }
+}
+
+/* 3) Применяем переменные глобально */
+body {
+  background: var(--bg);
+  color: var(--fg);
+  margin: 0;
+  font-family: sans-serif;
+}
+
+/* ⇒ NAVBAR: always in main.css, once for all pages */
 .navbar {
   display: flex;
-  justify-content: space-between; /* Левая группа влево, правая — вправо */
-  align-items: center;            /* Выравниваем по центру по вертикали */
-  padding: 0.5rem 1rem;
-  background: #f8f8f8;
-}
-
-/* левая группа просто строчные ссылки */
-.nav-left a {
-  margin-right: 0.75rem;
-  text-decoration: none;
-  color: #333;
-}
-
-/* правая группа — ссылки и форма */
-.nav-right {
-  display: flex;
+  justify-content: space-between;
   align-items: center;
+  background: var(--nav-bg);
+  padding: 1rem 2rem;    /* identical padding everywhere */
+  height: 4rem;          /* fixed height */
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* отступ между «Личный кабинет» и кнопкой */
-.nav-right a,
-.nav-right .logout-form button {
-  margin-left: 1rem;
+.nav-left a,
+.nav-right a {
+  margin-right: 1rem;
+  color: var(--fg);
   text-decoration: none;
-  color: #333;
+  line-height: 1;       /* centers text vertically */
 }
 
-/* делаем форму и кнопку в линию без лишних отступов */
+.nav-left a:last-child,
+.nav-right a:last-child {
+  margin-right: 0;
+}
+
 .logout-form {
-  margin: 0;
+  display: inline-block;
+  margin-left: 1rem;
 }
 .logout-form button {
   background: transparent;
   border: none;
+  color: var(--fg);
   cursor: pointer;
   font: inherit;
-  /* можно добавить свои стили: цвет, паддинги */
+  line-height: 1;
 }
-
-.gallery { display: flex; flex-wrap: wrap; gap: 10px; }
-.thumb { width: 150px; height: auto; border-radius: 4px; }
-.video-list ul {
-    list-style: none;
-    padding: 0;
-  }
-  .video-list li {
-    margin: 5px 0;
-  }
-  #player-container {
-    margin-top: 20px;
-  }
-.container { max-width: 960px; margin: 0 auto; padding: 0 1rem; }
-.btn { display: inline-block; padding: .5rem 1rem; border-radius: 4px; text-decoration: none; }
-.btn-primary { background: var(--primary); color: #fff; }
-.btn-accent  { background: var(--accent); color: #fff; }
-  
