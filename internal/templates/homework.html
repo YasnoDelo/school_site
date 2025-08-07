@@ -1,22 +1,15 @@
 {{ define "content" }}
-<h1>Homework</h1>
+<h1>Домашка: {{ .Data.Topic }}</h1>
 <form method="POST">
   {{ range .Data.Tasks }}
-    <div>
-      <p><strong>Task {{ .ID }}:</strong></p>
-      <!-- здесь теперь чистый LaTeX -->
-      <div>{{ .Question }}</div>
-      <input type="text" name="answer_{{ .ID }}" placeholder="Your answer">
-      {{ if $.Data.Results }}
-        {{ if index $.Results .ID }}
-          <span style="color:green">✓</span>
-        {{ else }}
-          <span style="color:red">✗</span>
-        {{ end }}
+    <div class="task">
+      <p>{{ .ID }}. {{ .Prompt }}</p>
+      {{ range .Images }}
+        <img src="/static/courses/math/problems/{{ . }}" alt="">
       {{ end }}
+      <input name="answer_{{ .ID }}" placeholder="Ваш ответ">
     </div>
-    <hr>
   {{ end }}
-  <button type="submit">Check</button>
+  <button type="submit" class="btn-primary">Проверить</button>
 </form>
 {{ end }}

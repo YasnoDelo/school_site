@@ -91,18 +91,12 @@ func NewServerMux(cfg *config.Config) http.Handler {
 	r.HandleFunc("/login", handlers.LoginPage).Methods("GET")
 	r.HandleFunc("/login", handlers.LoginPost).Methods("POST")
 	r.HandleFunc("/logout", handlers.Logout).Methods("POST")
+	// Список всех курсов
+	r.HandleFunc("/courses", handlers.ListCourses).Methods("GET")
+	// Конкретный курс по subject (math, infa и т. д.)
+	r.HandleFunc("/courses/{subject}", handlers.CoursePage).Methods("GET")
 
 	// 9) Защищённые маршруты
-	r.Handle("/courses1",
-		middleware.AuthRequired(http.HandlerFunc(handlers.Courses1)),
-	).Methods("GET")
-	r.Handle("/courses2",
-		middleware.AuthRequired(http.HandlerFunc(handlers.Courses2)),
-	).Methods("GET")
-	r.Handle("/courses3",
-		middleware.AuthRequired(http.HandlerFunc(handlers.Courses3)),
-	).Methods("GET")
-
 	r.Handle("/profile",
 		middleware.AuthRequired(http.HandlerFunc(handlers.ProfilePage)),
 	).Methods("GET")

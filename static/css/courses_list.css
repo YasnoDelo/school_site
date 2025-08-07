@@ -1,0 +1,60 @@
+/* Сетка карточек */
+.courses-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 2rem auto;
+  max-width: 1200px;
+  padding: 0 1rem;
+}
+
+/* Карточка курса: flex-структура и минимальная высота */
+.course-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* растягиваем контент по высоте */
+  background: var(--card-bg);
+  color: var(--fg);
+  border-radius: 6px;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  min-height: 320px; /* можно менять под ваш дизайн */
+  transition: transform .2s, box-shadow .2s;
+}
+
+/* Ховер-эффект */
+.course-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Заголовок */
+.course-card h3 {
+  margin-top: 0;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Описание занимает весь оставшийся блок */
+.course-card p {
+  flex-grow: 1;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+/* Кнопка внутри карточки */
+.course-card .btn-primary {
+  align-self: flex-start; /* прижатие кнопки к левому краю */
+  padding: 0.5rem 1rem;
+  background: var(--primary);
+  color: var(--button-fg, #fff);
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+/* Мобильная адаптивность */
+@media (max-width: 768px) {
+  .courses-container {
+    grid-template-columns: 1fr;
+  }
+}

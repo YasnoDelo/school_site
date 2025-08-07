@@ -1,0 +1,40 @@
+{{ define "head" }}
+<link rel="stylesheet" href="/static/css/courses_detail.css">
+<script src="/static/js/accordion.js" defer></script>
+{{ end }}
+
+{{ define "content" }}
+<h1>{{ .Title }}</h1>
+
+<div class="accordion">
+  {{ range .Data.Topics }}
+  <div class="section">
+    <button class="section-toggle">
+      {{ .Name }} <span class="arrow">▶</span>
+    </button>
+    <div class="section-content">
+      <ul>
+        <li>
+          <a href="/static/courses/{{ $.Data.Subject }}/methodics/{{ .Methodics }}">
+            Методичка
+          </a>
+        </li>
+        <li>
+          <a href="/static/courses/{{ $.Data.Subject }}/lectures/{{ .Lecture }}">
+            Лекция
+          </a>
+        </li>
+        <li>
+          <a href="/static/courses/{{ $.Data.Subject }}/cheats/{{ .Cheat }}">
+            Шпаргалка
+          </a>
+        </li>
+        <li>
+          <a href="/homework?topic={{ .Name }}">Домашка</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  {{ end }}
+</div>
+{{ end }}

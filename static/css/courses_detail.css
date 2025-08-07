@@ -1,0 +1,46 @@
+.accordion .section {
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    margin-bottom: 0.5rem;
+  }
+  .section-toggle {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--card-bg);
+    color: var(--fg);
+    text-align: left;
+    font-size: 1.1rem;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .section-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background: var(--bg);
+    padding: 0 1rem;
+  }
+  .section-content ul {
+    list-style: none;
+    padding: 0.5rem 0;
+    margin: 0;
+  }
+  .section-content li + li {
+    margin-top: 0.5rem;
+  }
+  .section-content a {
+    color: var(--primary);
+    text-decoration: none;
+  }
+  .arrow {
+    transition: transform 0.3s ease;
+  }
+  .section.open .section-content {
+    max-height: 500px;
+  }
+  .section.open .arrow {
+    transform: rotate(90deg);
+  }
+  
