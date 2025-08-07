@@ -1,0 +1,13 @@
+{{ define "head" }}{{ end }}
+{{ define "content" }}
+<h1>{{ .Title }}</h1>
+<ul class="subject-list">
+  {{ range .Data.Subjects }}
+    <li>
+      <a class="subject-link" href="/tasks/{{ . }}">
+        {{ . }}
+      </a>
+    </li>
+  {{ end }}
+</ul>
+{{ end }}

@@ -1,0 +1,30 @@
+{{ define "content" }}
+<h1>{{ .Title }}</h1>
+<p>Предмет: <strong>{{ .Data.Subject }}</strong>, тема: <strong>{{ .Data.Topic }}</strong></p>
+
+<form method="POST">
+  {{ range .Data.Tasks }}
+    <div class="task">
+      <p><strong>Задача {{ .ID }}:</strong> {{ .Prompt }}</p>
+      {{ range .Images }}
+        <img src="/static/courses/{{ $.Data.Subject }}/problems/images/{{ . }}" alt="">
+      {{ end }}
+      <input name="answer_{{ .ID }}" value="{{ index $.Data.UserAns .ID }}" placeholder="Ваш ответ">
+
+      {{ if $.Data.Checked }}
+        {{ if index $.Data.Results .ID }}
+          <p class="correct">✅ Верно!</p>
+        {{ else }}
+          <p class="wrong">❌ Неверно. Правильный ответ: {{ index .Answers 0 }}</p>
+          <details>
+            <summary>Показать решение</summary>
+            <p>{{ .Solution }}</p>
+          </details>
+        {{ end }}
+      {{ end }}
+    </div>
+    <hr>
+  {{ end }}
+  <button type="submit" class="btn-primary">Проверить</button>
+</form>
+{{ end }}

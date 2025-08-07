@@ -83,7 +83,10 @@ func NewServerMux(cfg *config.Config) http.Handler {
 	// 8) Публичные маршруты
 	r.HandleFunc("/", handlers.Home).Methods("GET")
 	r.HandleFunc("/materials", handlers.Materials).Methods("GET")
-	r.HandleFunc("/homework", handlers.Homework).Methods("GET", "POST")
+	// Показывает выбор предмета
+	r.HandleFunc("/tasks", handlers.tasksSubjects).Methods("GET")
+	r.HandleFunc("/tasks/{subject}", handlers.tasksTopics).Methods("GET")
+	r.HandleFunc("/tasks/{subject}/{topic}", handlers.tasksByTopic).Methods("GET", "POST")
 	r.HandleFunc("/gallery", handlers.Gallery).Methods("GET")
 	r.HandleFunc("/video", handlers.VideoPage).Methods("GET")
 	r.HandleFunc("/register", handlers.RegisterPage).Methods("GET")

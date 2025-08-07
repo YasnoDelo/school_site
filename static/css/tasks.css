@@ -1,0 +1,27 @@
+.tasks-topics {
+    list-style: none;
+    padding: 0;
+}
+.tasks-topics li + li {
+    margin-top: 0.5rem;
+}
+.tasks-topics a {
+    text-decoration: none;
+    color: var(--primary);
+    font-weight: bold;
+}
+.correct {
+    color: green;
+    font-weight: bold;
+}
+.wrong {
+    color: red;
+    font-weight: bold;
+}
+details {
+    margin-top: 0.5rem;
+    background: #eee;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+  

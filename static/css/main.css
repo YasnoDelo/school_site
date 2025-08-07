@@ -47,8 +47,7 @@ body {
   background: var(--nav-bg);
   padding: 1rem 2rem;    /* identical padding everywhere */
   height: 4rem;          /* fixed height */
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 100;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
