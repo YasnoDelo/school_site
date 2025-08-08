@@ -1,0 +1,27 @@
+{{ define "head" }}
+<link rel="stylesheet" href="/static/css/about.css">
+{{ end }}
+
+{{ define "content" }}
+<div class="about-hero">
+  <div class="about-hero-inner container">
+    <h1>{{ .Title }}</h1>
+    <p class="lead">Немного о нас — кто делает курсы, пишет материалы и поддерживает платформу.</p>
+  </div>
+</div>
+
+<div class="about-container container">
+  <section class="team-grid">
+    {{ range .Data.Members }}
+    <article class="team-card">
+      <div class="team-photo-wrap">
+        <img class="team-photo" src="/static/{{ .Photo }}" alt="Фото {{ .Name }}" loading="lazy">
+      </div>
+      <h3 class="team-name">{{ .Name }}</h3>
+      {{ if .Role }}<p class="team-role">{{ .Role }}</p>{{ end }}
+      {{ if .Bio }}<p class="team-bio">{{ .Bio }}</p>{{ end }}
+    </article>
+    {{ end }}
+  </section>
+</div>
+{{ end }}

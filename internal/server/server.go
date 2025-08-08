@@ -82,11 +82,10 @@ func NewServerMux(cfg *config.Config) http.Handler {
 
 	// 8) Публичные маршруты
 	r.HandleFunc("/", handlers.Home).Methods("GET")
-	r.HandleFunc("/materials", handlers.Materials).Methods("GET")
 	// Показывает выбор предмета
-	r.HandleFunc("/tasks", handlers.tasksSubjects).Methods("GET")
-	r.HandleFunc("/tasks/{subject}", handlers.tasksTopics).Methods("GET")
-	r.HandleFunc("/tasks/{subject}/{topic}", handlers.tasksByTopic).Methods("GET", "POST")
+	r.HandleFunc("/tasks", handlers.TasksSubjects).Methods("GET")
+	r.HandleFunc("/tasks/{subject}", handlers.TasksTopics).Methods("GET")
+	r.HandleFunc("/tasks/{subject}/{topic}", handlers.TasksByTopic).Methods("GET", "POST")
 	r.HandleFunc("/gallery", handlers.Gallery).Methods("GET")
 	r.HandleFunc("/video", handlers.VideoPage).Methods("GET")
 	r.HandleFunc("/register", handlers.RegisterPage).Methods("GET")
@@ -94,9 +93,8 @@ func NewServerMux(cfg *config.Config) http.Handler {
 	r.HandleFunc("/login", handlers.LoginPage).Methods("GET")
 	r.HandleFunc("/login", handlers.LoginPost).Methods("POST")
 	r.HandleFunc("/logout", handlers.Logout).Methods("POST")
-	// Список всех курсов
+	r.HandleFunc("/about", handlers.About).Methods("GET")
 	r.HandleFunc("/courses", handlers.ListCourses).Methods("GET")
-	// Конкретный курс по subject (math, infa и т. д.)
 	r.HandleFunc("/courses/{subject}", handlers.CoursePage).Methods("GET")
 
 	// 9) Защищённые маршруты

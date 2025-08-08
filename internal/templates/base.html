@@ -24,31 +24,45 @@
   </script>
   <!-- Сам движок MathJax -->
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
+  <script src="/static/js/navbar.js" defer></script>
 
   {{ block "head" . }}{{ end }}
   <link rel="stylesheet" href="/static/css/main.css">
 </head>
 <body>
-  <!-- единый навбар для всех страниц -->
-  <nav class="navbar">
-    <div class="nav-left">
-      <a href="/">ЛОГО</a>
-      <a href="/courses">Курсы</a>
-      <a href="/materials">Материалы</a>
-      <a href="/tasks">Задачи</a>
-      <a href="/about">О нас</a>
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner container">
+    <button id="nav-toggle" class="nav-toggle" aria-controls="primary-menu" aria-expanded="false" aria-label="Открыть меню">
+      <span class="hamburger" aria-hidden="true"></span>
+    </button>
+
+    <div class="nav-brand">
+      <a href="/" class="brand-link">ЛОГО</a>
     </div>
-    <div class="nav-right">
-      {{ if .IsAuth }}
-        <a href="/profile">Личный кабинет</a>
-        <form method="POST" action="/logout" class="logout-form">
-          <button type="submit">Выйти</button>
-        </form>
-      {{ else }}
-        <a href="/profile">Личный кабинет</a>
-      {{ end }}
+
+    <div id="primary-menu" class="nav-menu" hidden>
+      <div class="nav-left">
+        <a href="/courses">Курсы</a>
+        <a href="/tasks">Задачи</a>
+        <a href="/about">О нас</a>
+      </div>
+
+      <div class="nav-right">
+        <!-- Профиль/аутентификация -->
+        <a class="profile-link" href="/profile">Личный кабинет</a>
+
+        {{ if .IsAuth }}
+          <form method="POST" action="/logout" class="logout-form" aria-label="Выйти">
+            <button type="submit" class="btn-link">Выйти</button>
+          </form>
+        {{ else }}
+          <a class="login-link" href="/login">Войти</a>
+        {{ end }}
+      </div>
     </div>
-  </nav>
+  </div>
+</nav>
+
 
   <!-- контент страницы -->
   {{ template "content" . }}

@@ -1,27 +1,67 @@
-.tasks-topics {
+.tasks-container {
+    max-width: 900px;        /* ограничиваем ширину */
+    margin: 2rem auto;       /* центрируем по горизонтали */
+    padding: 0 1.5rem;       /* отступы по бокам */
+  }
+  
+  .tasks-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-align: center;      /* выравнивание заголовка по центру */
+    color: #333;
+  }
+  
+  /* Общий стиль списков */
+  ul.tasks-topics,
+  ul.subject-list {
     list-style: none;
     padding: 0;
-}
-.tasks-topics li + li {
-    margin-top: 0.5rem;
-}
-.tasks-topics a {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center; /* ссылки по центру */
+  }
+  
+  .tasks-topics li,
+  .subject-list li {
+    margin: 0;
+  }
+  
+  a.topic-link,
+  a.subject-link {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    background-color: #e0e0e0;
+    color: #333;
     text-decoration: none;
-    color: var(--primary);
-    font-weight: bold;
-}
-.correct {
-    color: green;
-    font-weight: bold;
-}
-.wrong {
-    color: red;
-    font-weight: bold;
-}
-details {
-    margin-top: 0.5rem;
-    background: #eee;
-    padding: 0.5rem;
-    border-radius: 4px;
-}
+    border-radius: 8px;
+    transition: all 0.2s ease-in-out;
+    font-weight: 500;
+  }
+  
+  a.topic-link:hover,
+  a.subject-link:hover {
+    background-color: #bdbdbd;
+    color: #000;
+    transform: translateY(-2px);
+  }
+  
+  /* Тёмная тема */
+  body.dark .tasks-title {
+    color: #f0f0f0;
+  }
+  
+  body.dark a.topic-link,
+  body.dark a.subject-link {
+    background-color: #444;
+    color: #f0f0f0;
+  }
+  
+  body.dark a.topic-link:hover,
+  body.dark a.subject-link:hover {
+    background-color: #666;
+    color: #fff;
+  }
   

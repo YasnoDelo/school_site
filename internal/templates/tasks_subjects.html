@@ -1,0 +1,20 @@
+{{ define "head" }}
+<link rel="stylesheet" href="/static/css/tasks.css">
+{{ end }}
+
+{{ define "content" }}
+<div class="tasks-container">
+  <h1 class="tasks-title">Выберите предмет</h1>
+
+  <ul class="subject-list">
+    {{ range .Data.Subjects }}
+      <li>
+        <a class="subject-link" href="/tasks/{{ . }}">
+          {{ . }}
+        </a>
+      </li>
+    {{ end }}
+  </ul>
+</div>
+
+{{ end }}

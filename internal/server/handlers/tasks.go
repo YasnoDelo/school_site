@@ -21,8 +21,8 @@ type Problem struct {
 	Solution string   `json:"solution"`
 }
 
-// tasksData — данные для шаблона
-type tasksData struct {
+// TasksData — данные для шаблона
+type TasksData struct {
 	Subject string
 	Topic   string
 	Tasks   []Problem
@@ -32,7 +32,7 @@ type tasksData struct {
 }
 
 // tasksByTopic читает банк из static/courses/{subject}/problems/bank.json
-func tasksByTopic(w http.ResponseWriter, r *http.Request) {
+func TasksByTopic(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	subject := vars["subject"]
 	topic := vars["topic"]
@@ -62,7 +62,7 @@ func tasksByTopic(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := tasksData{
+	data := TasksData{
 		Subject: subject,
 		Topic:   topic,
 		Tasks:   tasks,
@@ -96,13 +96,13 @@ func tasksByTopic(w http.ResponseWriter, r *http.Request) {
 }
 
 // tasksTopicsData — payload для /tasks/{subject}
-type tasksTopicsData struct {
+type TasksTopicsData struct {
 	Subject string
 	Topics  []string
 }
 
 // tasksTopics показывает список тем для заданного subject
-func tasksTopics(w http.ResponseWriter, r *http.Request) {
+func TasksTopics(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	subject := vars["subject"] // "math" или "infa"
 
@@ -131,18 +131,18 @@ func tasksTopics(w http.ResponseWriter, r *http.Request) {
 	}
 	sort.Strings(topics) // опционально, чтобы было в порядке
 
-	data := tasksTopicsData{Subject: subject, Topics: topics}
+	data := TasksTopicsData{Subject: subject, Topics: topics}
 	title := fmt.Sprintf("Домашка: %s — темы", subject)
 
 	render(w, r, "tasks_topics", title, data)
 }
 
 // tasksSubjectsData
-type tasksSubjectsData struct {
+type TasksSubjectsData struct {
 	Subjects []string
 }
 
-func tasksSubjects(w http.ResponseWriter, r *http.Request) {
-	data := tasksSubjectsData{Subjects: []string{"math", "infa"}}
+func TasksSubjects(w http.ResponseWriter, r *http.Request) {
+	data := TasksSubjectsData{Subjects: []string{"math", "infa"}}
 	render(w, r, "tasks_subjects", "Домашние задания", data)
 }

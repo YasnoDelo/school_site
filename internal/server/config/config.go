@@ -16,6 +16,17 @@ type Config struct {
 
 func Load() *Config {
 	_ = godotenv.Load()
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	env := os.Getenv("ENV")
+	if env == "" {
+		env = "development"
+	}
+
 	log.Println("Raw DB_URL:", os.Getenv("DB_URL"))
 
 	return &Config{

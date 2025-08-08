@@ -52,28 +52,220 @@ body {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.nav-left a,
-.nav-right a {
-  margin-right: 1rem;
+.navbar .nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+}
+
+.nav-brand .brand-link {
+  font-weight: 700;
   color: var(--fg);
   text-decoration: none;
-  line-height: 1;       /* centers text vertically */
 }
 
-.nav-left a:last-child,
-.nav-right a:last-child {
-  margin-right: 0;
+/* hamburger */
+.nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 6px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+.hamburger {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--fg);
+  position: relative;
+}
+.hamburger::before,
+.hamburger::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--fg);
+}
+.hamburger::before { top: -7px; }
+.hamburger::after  { bottom: -7px; }
+
+/* MENU (hidden by default on mobile) */
+.nav-menu {
+  /* menu will be shown/hidden via JS (remove hidden attribute) */
+  width: 100%;
+  margin-top: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
 }
 
+.nav-left,
+.nav-right {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+/* links styling */
+.nav-left a,
+.nav-right a,
+.nav-right .btn-link,
+.nav-right .btn-theme {
+  color: var(--fg);
+  text-decoration: none;
+  padding: 0.45rem 0.6rem;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.nav-left a:hover,
+.nav-right a:hover,
+.nav-right .btn-link:hover,
+.nav-right .btn-theme:hover {
+  background: rgba(0,0,0,0.04);
+}
+
+/* logout form as inline block on mobile */
 .logout-form {
-  display: inline-block;
-  margin-left: 1rem;
+  margin: 0;
 }
-.logout-form button {
+.logout-form .btn-link {
   background: transparent;
   border: none;
-  color: var(--fg);
   cursor: pointer;
   font: inherit;
-  line-height: 1;
+  padding: 0.45rem 0.6rem;
+}
+
+/* === Desktop (>= 768px) — show menu inline and hide hamburger === */
+@media (min-width: 768px) {
+  .nav-toggle { display: none; }
+  .nav-menu {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0;
+    width: auto;
+  }
+  .nav-left {
+    flex-direction: row;
+    gap: 1rem;
+  }
+  .nav-right {
+    flex-direction: row;
+    gap: 0.6rem;
+    align-items: center;
+  }
+  .nav-inner { padding: 1rem 2rem; }
+}
+
+/* prevent content jump when menu opens on mobile — optional "panel" look */
+.nav-menu.open {
+  animation: slideDown 160ms ease-out;
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* DARK THEME tweaks (if you use html.dark-theme or body.dark) */
+html.dark-theme .hamburger,
+html.dark-theme .nav-left a,
+html.dark-theme .nav-right a,
+html.dark-theme .nav-right .btn-theme {
+  color: var(--fg);
+  background: transparent;
+}
+
+/* контейнер для внутренностей навбара */
+.navbar .nav-inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+  /* не ставим fixed/sticky здесь — это обычный flow */
+}
+
+/* бренд слева */
+.nav-brand {
+  display: flex;
+  align-items: center;
+  margin-right: 0.5rem;
+}
+
+/* Основное меню (mobile: column, desktop: row) */
+.nav-menu {
+  width: 100%;               /* важно: занимает всю доступную ширину */
+  display: flex;
+  flex-direction: column;    /* mobile by default */
+  gap: 0.8rem;
+  margin-top: 0.6rem;
+  box-sizing: border-box;
+}
+
+/* Левые и правые секции меню (mobile: column) */
+.nav-left,
+.nav-right {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+/* ---- Desktop rules (>=768px) ---- */
+@media (min-width: 768px) {
+  .nav-toggle { display: none; }
+
+  /* делаем меню строкой и распределяем пространство */
+  .nav-menu {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between; /* экономит место между левой и правой группой */
+    margin-top: 0;
+  }
+
+  /* слева — ряд ссылок */
+  .nav-left {
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  /* справа — выталкиваем в конец строки */
+  .nav-right {
+    flex-direction: row;
+    gap: 0.6rem;
+    align-items: center;
+
+    /* самый надёжный способ оттолкнуть вправо */
+    margin-left: auto;
+  }
+
+  /* optional: ограничение ширины контейнера */
+  .nav-inner.container {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+  }
+}
+
+/* Стили для ссылок/кнопок (пример, если нужно) */
+.nav-left a,
+.nav-right a,
+.nav-right .btn-link,
+.nav-right .btn-theme {
+  color: var(--fg);
+  text-decoration: none;
+  padding: 0.45rem 0.6rem;
+  border-radius: 6px;
 }
