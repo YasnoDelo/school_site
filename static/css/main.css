@@ -145,127 +145,251 @@ body {
   padding: 0.45rem 0.6rem;
 }
 
-/* === Desktop (>= 768px) — show menu inline and hide hamburger === */
-@media (min-width: 768px) {
-  .nav-toggle { display: none; }
-  .nav-menu {
-    display: flex !important;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-top: 0;
-    width: auto;
-  }
-  .nav-left {
-    flex-direction: row;
-    gap: 1rem;
-  }
-  .nav-right {
-    flex-direction: row;
-    gap: 0.6rem;
-    align-items: center;
-  }
-  .nav-inner { padding: 1rem 2rem; }
+.navbar {
+  height: auto;            /* позволяет navbar увеличиваться по высоте */
+  padding: 0.6rem 1rem;    /* чуть компактнее на мобилях */
 }
 
-/* prevent content jump when menu opens on mobile — optional "panel" look */
+/* Скрываем меню по умолчанию на мобильных,
+   показываем только по классу .open */
+.nav-menu {
+  display: none;           /* скрыто по умолчанию на мобилях */
+  position: absolute;      /* выпадающая панель под navbar */
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--nav-bg);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  padding: 0.8rem 1rem;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  z-index: 99;
+}
+
+/* Открытое меню (показываем) */
+.nav-menu.open {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Увеличим touch-цели и отступы для ссылок */
+.nav-left a,
+.nav-right a,
+.nav-right .btn-link,
+.nav-right .btn-theme {
+  padding: 0.65rem 0.75rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* При открытом меню — блока справа и слева становятся колонками (как и было) */
+.nav-left, .nav-right {
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Убедимся, что гамбургер всегда видим на мобилях */
+.nav-toggle {
+  display: inline-flex;
+}
+
+/* Предотвращаем, чтобы меню уходило за верх (плавное появление) */
 .nav-menu.open {
   animation: slideDown 160ms ease-out;
 }
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
+
+/* Немного больше высота кнопки гамбургера для удобства на touch */
+.nav-toggle { width:48px; height:48px; }
+
+/* ---------- DESKTOP rules (override mobile) ---------- */
+@media (min-width: 768px) {
+  .navbar { height: 4rem; padding: 1rem 2rem; }
+  .nav-toggle { display: none; }
+  .nav-menu {
+    display: flex !important;
+    position: static;
+    box-shadow: none;
+    padding: 0;
+    background: transparent;
+    flex-direction: row;
+    gap: 1rem;
+  }
+  .nav-left { flex-direction: row; gap: 1rem; }
+  .nav-right {
+    flex-direction: row;
+    gap: 0.6rem;
+    margin-left: auto; /* вытолкнуть вправо */
+    align-items: center;
+  }
 }
 
-/* DARK THEME tweaks (if you use html.dark-theme or body.dark) */
-html.dark-theme .hamburger,
-html.dark-theme .nav-left a,
-html.dark-theme .nav-right a,
-html.dark-theme .nav-right .btn-theme {
-  color: var(--fg);
-  background: transparent;
+/* ====== Надёжный flex-контейнер для навбара ====== */
+.nav-inner {
+  display: flex !important;        /* гарантируем flex */
+  align-items: center;
+  width: 100%;                     /* чтобы занять всю ширину */
+  gap: 1rem;
+  box-sizing: border-box;
+  justify-content: flex-start;     /* слева элементы по умолчанию */
 }
 
-/* контейнер для внутренностей навбара */
-.navbar .nav-inner {
+/* Убедимся, что меню — гибкий контейнер */
+.nav-menu {
   display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* Левая часть — занимает ровно то пространство, которое нужно */
+.nav-left {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex: 0 0 auto;   /* не растёт, не сжимается */
+}
+
+/* Правая часть — «выталкивается» вправо */
+.nav-right {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  margin-left: auto;  /* ключевая строчка — двигает эту часть вправо */
+  flex: 0 0 auto;
+  /* если нужно — можно добавить text-align:right; */
+}
+
+/* На мобильных сохраняем колонную структуру внутри меню
+   но при этом nav-right всё равно остаётся отдельной колонкой */
+@media (max-width: 767px) {
+  .nav-menu { flex-direction: column; align-items: stretch; }
+  .nav-left, .nav-right { flex-direction: column; align-items: stretch; }
+}
+
+/* На десктопе: делаем строкой, сохраняя margin-left:auto */
+@media (min-width: 768px) {
+  .nav-menu { flex-direction: row; }
+  .nav-left { flex-direction: row; }
+  .nav-right { flex-direction: row; }
+}
+
+/* ---------------- NAV: mobile-first (override old rules) ---------------- */
+
+/* базовые переменные уже у тебя :root {...} */
+
+/* navbar compact on mobile (allow grow) */
+.navbar {
+  position: relative;
+  z-index: 120;
+  background: var(--nav-bg);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+  padding: 0.5rem 1rem;
+}
+
+/* internal flex container */
+.nav-inner {
+  display: flex !important;
   align-items: center;
   gap: 1rem;
-  padding: 0.6rem 1rem;
-  /* не ставим fixed/sticky здесь — это обычный flow */
-}
-
-/* бренд слева */
-.nav-brand {
-  display: flex;
-  align-items: center;
-  margin-right: 0.5rem;
-}
-
-/* Основное меню (mobile: column, desktop: row) */
-.nav-menu {
-  width: 100%;               /* важно: занимает всю доступную ширину */
-  display: flex;
-  flex-direction: column;    /* mobile by default */
-  gap: 0.8rem;
-  margin-top: 0.6rem;
+  width: 100%;
   box-sizing: border-box;
 }
 
-/* Левые и правые секции меню (mobile: column) */
-.nav-left,
-.nav-right {
+/* brand */
+.nav-brand { display:flex; align-items:center; }
+
+/* hamburger visible on mobile */
+.nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 6px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+.hamburger {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--fg);
+  position: relative;
+}
+.hamburger::before,
+.hamburger::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--fg);
+}
+.hamburger::before { top: -7px; }
+.hamburger::after  { bottom: -7px; }
+
+/* menu hidden by default on mobile */
+.nav-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--nav-bg);
+  padding: 0.8rem 1rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  box-sizing: border-box;
+}
+
+/* open state */
+.nav-menu.open {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
 }
 
-/* ---- Desktop rules (>=768px) ---- */
+/* left / right default mobile layout (columns) */
+.nav-left, .nav-right {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+/* links style */
+.nav-left a, .nav-right a, .nav-right .btn-link, .nav-right .btn-theme {
+  color: var(--fg);
+  text-decoration: none;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+}
+.nav-left a:hover, .nav-right a:hover, .nav-right .btn-theme:hover {
+  background: rgba(0,0,0,0.04);
+}
+
+/* ---------------- DESKTOP (>=768px): inline menu, hide hamburger ---------------- */
 @media (min-width: 768px) {
   .nav-toggle { display: none; }
-
-  /* делаем меню строкой и распределяем пространство */
   .nav-menu {
+    position: static;
+    display: flex !important;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between; /* экономит место между левой и правой группой */
-    margin-top: 0;
-  }
-
-  /* слева — ряд ссылок */
-  .nav-left {
-    flex-direction: row;
+    padding: 0;
     gap: 1rem;
-    align-items: center;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
   }
-
-  /* справа — выталкиваем в конец строки */
+  .nav-left { flex-direction: row; gap: 1rem; align-items:center; }
   .nav-right {
     flex-direction: row;
     gap: 0.6rem;
-    align-items: center;
-
-    /* самый надёжный способ оттолкнуть вправо */
-    margin-left: auto;
+    align-items:center;
+    margin-left: auto; /* <-- ключевой момент: отталкиваем вправо */
   }
-
-  /* optional: ограничение ширины контейнера */
-  .nav-inner.container {
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
-  }
-}
-
-/* Стили для ссылок/кнопок (пример, если нужно) */
-.nav-left a,
-.nav-right a,
-.nav-right .btn-link,
-.nav-right .btn-theme {
-  color: var(--fg);
-  text-decoration: none;
-  padding: 0.45rem 0.6rem;
-  border-radius: 6px;
+  .nav-inner { padding: 1rem 2rem; }
 }

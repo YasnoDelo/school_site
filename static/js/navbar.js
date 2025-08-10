@@ -1,50 +1,70 @@
-// static/js/navbar.js
-document.addEventListener('DOMContentLoaded', function() {
-    var toggle = document.getElementById('nav-toggle');
-    var menu = document.getElementById('primary-menu');
-    var html = document.documentElement;
-  
-    if (!toggle || !menu) return;
-  
-    toggle.addEventListener('click', function() {
-      var expanded = toggle.getAttribute('aria-expanded') === 'true';
-      if (expanded) {
-        toggle.setAttribute('aria-expanded', 'false');
-        toggle.setAttribute('aria-label', 'Открыть меню');
-        if (menu.classList) menu.classList.remove('open');
-        menu.setAttribute('hidden', '');
-        // allow scroll
-        html.classList.remove('nav-open');
-      } else {
-        toggle.setAttribute('aria-expanded', 'true');
-        toggle.setAttribute('aria-label', 'Закрыть меню');
-        if (menu.classList) menu.classList.add('open');
-        menu.removeAttribute('hidden');
-        // optionally prevent background scroll when menu open:
-        html.classList.add('nav-open');
-      }
-    });
-  
-    // close menu when clicking outside (mobile)
-    document.addEventListener('click', function(e) {
-      if (!menu.contains(e.target) && !toggle.contains(e.target) && menu.getAttribute('hidden') === null) {
-        // menu is open but click outside
-        toggle.setAttribute('aria-expanded', 'false');
-        toggle.setAttribute('aria-label', 'Открыть меню');
-        if (menu.classList) menu.classList.remove('open');
-        menu.setAttribute('hidden', '');
-        html.classList.remove('nav-open');
-      }
-    });
-  
-    // close on Escape
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' || e.key === 'Esc') {
-        toggle.setAttribute('aria-expanded', 'false');
-        menu.setAttribute('hidden', '');
-        if (menu.classList) menu.classList.remove('open');
-        html.classList.remove('nav-open');
-      }
-    });
+document.addEventListener('DOMContentLoaded', function () {
+  var btn = document.getElementById('nav-toggle');
+  var menu = document.querySelector('.nav-menu');
+  if (!btn || !menu) return;
+
+  var prevFocus = null;
+  btn.setAttribute('aria-expanded', 'false');
+
+  // scroll lock helpers (preserve scroll position)
+  var scrollAttr = 'data-scroll-y';
+  function lockScroll() {
+    var scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+    document.body.setAttribute(scrollAttr, String(scrollY));
+    document.body.style.position = 'fixed';
+    document.body.style.top = '-' + scrollY + 'px';
+    // compensate scrollbar width
+    var scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    if (scrollbarWidth > 0) document.body.style.paddingRight = scrollbarWidth + 'px';
+    document.body.classList.add('menu-open');
+  }
+  function unlockScroll() {
+    var saved = document.body.getAttribute(scrollAttr);
+    var scrollY = saved ? parseInt(saved, 10) : 0;
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.paddingRight = '';
+    document.body.classList.remove('menu-open');
+    window.scrollTo(0, scrollY);
+    document.body.removeAttribute(scrollAttr);
+  }
+
+  function openMenu() {
+    prevFocus = document.activeElement;
+    menu.classList.add('open');
+    menu.setAttribute('aria-hidden', 'false');
+    btn.setAttribute('aria-expanded', 'true');
+    lockScroll();
+    // focus on first link
+    var first = menu.querySelector('a, button');
+    if (first) first.focus();
+  }
+
+  function closeMenu() {
+    menu.classList.remove('open');
+    menu.setAttribute('aria-hidden', 'true');
+    btn.setAttribute('aria-expanded', 'false');
+    unlockScroll();
+    if (prevFocus && prevFocus.focus) prevFocus.focus();
+  }
+
+  btn.addEventListener('click', function (ev) {
+    if (menu.classList.contains('open')) closeMenu(); else openMenu();
   });
-  
+
+  // close on click outside
+  document.addEventListener('click', function (ev) {
+    if (!menu.classList.contains('open')) return;
+    var t = ev.target;
+    if (t === btn || btn.contains(t) || menu.contains(t)) return;
+    closeMenu();
+  });
+
+  // close on Esc
+  document.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Escape' && menu.classList.contains('open')) {
+      ev.preventDefault();
+      closeMenu();
+    }
+  });
+});

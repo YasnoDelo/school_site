@@ -30,42 +30,41 @@
   <link rel="stylesheet" href="/static/css/main.css">
 </head>
 <body>
-<nav class="navbar" role="navigation" aria-label="Main navigation">
+<nav class="navbar">
   <div class="nav-inner container">
-    <button id="nav-toggle" class="nav-toggle" aria-controls="primary-menu" aria-expanded="false" aria-label="Открыть меню">
+    <div class="nav-brand">
+      <a class="brand-link" href="/">ЛОГО</a>
+    </div>
+
+    <!-- гамбургер -->
+    <button id="nav-toggle" class="nav-toggle" aria-label="Открыть меню" aria-expanded="false" type="button">
       <span class="hamburger" aria-hidden="true"></span>
     </button>
 
-    <div class="nav-brand">
-      <a href="/" class="brand-link">ЛОГО</a>
-    </div>
-
-    <div id="primary-menu" class="nav-menu" hidden>
-      <div class="nav-left">
+    <!-- меню -->
+    <div class="nav-menu" role="menu" aria-hidden="true">
+      <div class="nav-left" role="menubar">
         <a href="/courses">Курсы</a>
-        <a href="/tasks">Задачи</a>
-        <a href="/about">О нас</a>
-      </div>
-
-      <div class="nav-right">
-        <!-- Профиль/аутентификация -->
+          <a href="/tasks">Задачи</a>
+          <a href="/about">О нас</a>
+        </div>
+        <div class="nav-right" role="menu">
         <a class="profile-link" href="/profile">Личный кабинет</a>
-
-        {{ if .IsAuth }}
-          <form method="POST" action="/logout" class="logout-form" aria-label="Выйти">
+          {{ if .IsAuth }}
+            <form method="POST" action="/logout" class="logout-form" aria-label="Выйти">
             <button type="submit" class="btn-link">Выйти</button>
-          </form>
-        {{ else }}
-          <a class="login-link" href="/login">Войти</a>
+            </form>
+          {{ else }}
+            <a class="login-link" href="/login">Войти</a>
         {{ end }}
-      </div>
+        </div>
     </div>
   </div>
 </nav>
 
 
-  <!-- контент страницы -->
   {{ template "content" . }}
 </body>
 </html>
 {{ end }}
+

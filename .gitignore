@@ -33,5 +33,7 @@ go.work.sum
 
 # Secret info
 .env
+*.gz
+deploy.sh
 
 some_shit
