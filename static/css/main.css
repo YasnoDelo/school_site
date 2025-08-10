@@ -393,3 +393,77 @@ body {
   }
   .nav-inner { padding: 1rem 2rem; }
 }
+
+/* ================== Mobile: unify menu items ================== */
+
+/* Когда меню открыто — делаем колоночную структуру, каждая колонка 100% */
+.nav-menu.open {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Группы занимают всю ширину */
+.nav-left,
+.nav-right {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: stretch; /* элементы растягиваются на всю ширину */
+}
+
+/* Унифицированный стиль для всех интерактивных элементов в меню (ссылки, кнопки) */
+.nav-menu a,
+.nav-menu button,
+.nav-menu .btn-link,
+.nav-menu .logout-form button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 0.85rem;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--fg);
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  font: inherit;
+}
+
+/* Ховер/фокус одинаковый для всех */
+.nav-menu a:hover,
+.nav-menu button:hover,
+.nav-menu .logout-form button:hover {
+  background: rgba(0,0,0,0.04);
+}
+
+/* Если у вас есть особая кнопка темы — тоже подстраиваем */
+.nav-menu .btn-theme {
+  text-align: left;
+  padding-left: 0.85rem;
+}
+
+/* Если в десктопе вы используете margin-left:auto — отменяем это поведение на мобилях */
+@media (max-width: 767px) {
+  .nav-right {
+    margin-left: 0 !important;
+  }
+}
+
+/* ================== Desktop: возвращаем прежний inline-вид ================== */
+@media (min-width: 768px) {
+  .nav-left, .nav-right { width: auto; flex-direction: row; align-items: center; }
+  .nav-menu { flex-direction: row; }
+  .nav-menu a,
+  .nav-menu button,
+  .logout-form button {
+    display: inline-flex;
+    width: auto;
+    padding: 0.45rem 0.6rem;
+    text-align: center;
+  }
+  .nav-right { margin-left: auto; } /* выталкивание вправо на десктопе */
+}
+
