@@ -26,6 +26,7 @@ type TasksData struct {
 	Subject string
 	Topic   string
 	Tasks   []Problem
+	Topics  []string
 	Checked bool           // ← был ли POST
 	Results map[int]bool   // ← результат по каждой задаче: id → правильность
 	UserAns map[int]string // ← что ввёл пользователь
@@ -65,7 +66,9 @@ func TasksByTopic(w http.ResponseWriter, r *http.Request) {
 	data := TasksData{
 		Subject: subject,
 		Topic:   topic,
+		Topics:  []string{},
 		Tasks:   tasks,
+		Checked: false,
 	}
 
 	// === Обработка POST ===

@@ -1,30 +1,65 @@
+{{ define "head" }}
+<link rel="stylesheet" href="/static/css/tasks.css">
+{{ end }}
+
 {{ define "content" }}
-<h1>{{ .Title }}</h1>
-<p>Предмет: <strong>{{ .Data.Subject }}</strong>, тема: <strong>{{ .Data.Topic }}</strong></p>
+<div class="tasks-container">
+  <h1 class="tasks-title">{{ .Title }}</h1>
+  <p class="tasks-sub">Предмет: <strong>{{ .Data.Subject }}</strong> · Тема: <strong>{{ .Data.Topic }}</strong></p>
 
-<form method="POST">
-  {{ range .Data.Tasks }}
-    <div class="task">
-      <p><strong>Задача {{ .ID }}:</strong> {{ .Prompt }}</p>
-      {{ range .Images }}
-        <img src="/static/courses/{{ $.Data.Subject }}/problems/images/{{ . }}" alt="">
+  <!-- optional topics / breadcrumbs -->
+  {{ if .Data.Topics }}
+    <ul class="tasks-topics" aria-label="Темы">
+      {{ range .Data.Topics }}
+        <li><a class="topic-link" href="/tasks/{{ $.Data.Subject }}/{{ . | urlquery }}">{{ . }}</a></li>
       {{ end }}
-      <input name="answer_{{ .ID }}" value="{{ index $.Data.UserAns .ID }}" placeholder="Ваш ответ">
-
-      {{ if $.Data.Checked }}
-        {{ if index $.Data.Results .ID }}
-          <p class="correct">✅ Верно!</p>
-        {{ else }}
-          <p class="wrong">❌ Неверно. Правильный ответ: {{ index .Answers 0 }}</p>
-          <details>
-            <summary>Показать решение</summary>
-            <p>{{ .Solution }}</p>
-          </details>
-        {{ end }}
-      {{ end }}
-    </div>
-    <hr>
+    </ul>
   {{ end }}
-  <button type="submit" class="btn-primary">Проверить</button>
-</form>
+
+  <form method="POST" autocomplete="off">
+    {{ range .Data.Tasks }}
+      <article class="task" id="task-{{ .ID }}">
+        <div class="task-header">
+          <div class="task-number">№{{ .ID }}</div>
+          <div style="flex:1">
+            <div class="meta">{{ .Topic }}</div>
+            <div class="task-prompt">{{ .Prompt | mdToHTML }}</div>
+          </div>
+        </div>
+
+        {{ if .Images }}
+        <div class="task-images">
+          {{ range .Images }}
+            <img src="/static/courses/{{ $.Data.Subject }}/problems/img/{{ . }}" alt="">
+          {{ end }}
+        </div>
+        {{ end }}
+
+        <div class="task-answer">
+          <input type="text" name="answer_{{ .ID }}" value="{{ index $.Data.UserAns .ID }}" placeholder="Ваш ответ">
+        </div>
+
+        {{ if $.Data.Checked }}
+          {{ if index $.Data.Results .ID }}
+            <p class="correct">✅ Верно!</p>
+          {{ else }}
+            <p class="wrong">❌ Неверно. Правильный ответ: <strong>{{ index .Answers 0 }}</strong></p>
+
+            <details>
+              <summary>Показать решение</summary>
+              <div class="task-solution">{{ .Solution | mdToHTML }}</div>
+            </details>
+          {{ end }}
+        {{ end }}
+      </article>
+
+      <hr class="task-sep">
+    {{ end }}
+
+    <div style="display:flex; gap:0.8rem; justify-content:center; margin-top:1rem;">
+      <button type="submit" class="btn-primary">Проверить</button>
+      <a class="btn-ghost" href="/tasks/{{ .Data.Subject }}">Назад к темам</a>
+    </div>
+  </form>
+</div>
 {{ end }}
