@@ -12,23 +12,28 @@
   --accent-700: #217a66;
   --danger: #e04b4b;
   --success: #2d9f45;
-  --glass: rgba(255,255,255,0.6);
+
+  --glass: rgba(255,255,255,0.6);      /* общий «стеклянный» светлый эффект (сохраним) */
+  --glass-contrast: rgba(0,0,0,0.03);  /* тон для заголовков / table head */
   --shadow: 0 6px 20px rgba(16,24,40,0.06);
   --radius: 12px;
 }
 
-/* dark theme variables (works with html.dark-theme or body.dark) */
+/* ========== Dark theme: warm brown (номер — однотонный фон) ========= */
 html.dark-theme, body.dark {
-  --bg: #2b2a27;
-  --card-bg: #34312f;
-  --fg: #efeae2;
-  --muted: #cfc6bb;
-  --accent: #90caf9;
-  --accent-700: #6ea9e9;
-  --danger: #ff7b7b;
-  --success: #60d68a;
-  --glass: rgba(20,20,20,0.45);
-  --shadow: 0 8px 28px rgba(0,0,0,0.6);
+  --bg: #1f1714;
+  --card-bg: #24201d;
+  --fg: #fcfcfb;
+  --muted: #d3c7bf;
+  --accent: #c19a6b;
+  --accent-700: #a87d4e;
+  --danger: #ff8a8a;
+  --success: #79c17b;
+
+  --nav-bg: rgba(31,23,20,0.85);
+  --glass: rgba(255,255,255,0.02);
+  --glass-contrast: rgba(255,255,255,0.02);
+  --shadow: 0 10px 30px rgba(0,0,0,0.6);
 }
 
 /* page background */
@@ -120,19 +125,6 @@ a.topic-link:hover, a.subject-link:hover {
   margin-bottom: 0.6rem;
 }
 
-.task-number {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: linear-gradient(180deg,var(--glass),transparent);
-  color: var(--fg);
-  font-weight: 700;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-  border: 1px solid rgba(0,0,0,0.04);
-}
 
 /* prompt area (markdown -> html injected) */
 .task-prompt {
