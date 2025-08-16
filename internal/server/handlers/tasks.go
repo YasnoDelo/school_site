@@ -4,9 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math"
+	"math/big"
 	"net/http"
 	"path/filepath"
 	"sort"
+	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -148,4 +152,100 @@ type TasksSubjectsData struct {
 func TasksSubjects(w http.ResponseWriter, r *http.Request) {
 	data := TasksSubjectsData{Subjects: []string{"math", "infa"}}
 	render(w, r, "tasks_subjects", "Домашние задания", data)
+}
+
+// normalize — убирает пробелы, обрезает $, приводит к нижнему регистру
+func normalize(s string) string {
+	s = strings.TrimSpace(s)
+	// убрать окружающие $ (формулы) и фигурные скобки
+	s = strings.Trim(s, "$ \t\n\r")
+	s = strings.Trim(s, "{}")
+	// заменить NBSP на обычный пробел
+	s = strings.ReplaceAll(s, "\u00A0", " ")
+	// collapse внутренние пробелы
+	s = strings.Join(strings.Fields(s), " ")
+	return strings.ToLower(s)
+}
+
+// tryParseNumber — пытается получить float64 из строки.
+// Поддерживает "1.23", "1,23" и простые дроби "3/4".
+// Возвращает (value, true) при успехе.
+func tryParseNumber(s string) (float64, bool) {
+	s = strings.TrimSpace(s)
+	if s == "" {
+		return 0, false
+	}
+
+	// поддержка дробей вида a/b (включая знаки и запятые)
+	if strings.Contains(s, "/") {
+		// убираем пробелы вокруг '/'
+		parts := strings.SplitN(s, "/", 2)
+		if len(parts) == 2 {
+			a := strings.ReplaceAll(strings.TrimSpace(parts[0]), ",", ".")
+			b := strings.ReplaceAll(strings.TrimSpace(parts[1]), ",", ".")
+			// попытаемся через big.Rat
+			ra := new(big.Rat)
+			rb := new(big.Rat)
+			okA := false
+			okB := false
+			if _, ok := ra.SetString(a); ok {
+				okA = true
+			} else {
+				// как запас: если a - целое/float
+				if fa, err := strconv.ParseFloat(a, 64); err == nil {
+					ra.SetFloat64(fa)
+					okA = true
+				}
+			}
+			if _, ok := rb.SetString(b); ok {
+				okB = true
+			} else {
+				if fb, err := strconv.ParseFloat(b, 64); err == nil {
+					rb.SetFloat64(fb)
+					okB = true
+				}
+			}
+			if okA && okB {
+				r := new(big.Rat).Quo(ra, rb)
+				f, _ := r.Float64()
+				return f, true
+			}
+		}
+	}
+
+	// заменяем запятую на точку и пробуем float
+	s2 := strings.ReplaceAll(s, ",", ".")
+	if f, err := strconv.ParseFloat(s2, 64); err == nil {
+		return f, true
+	}
+	return 0, false
+}
+
+// answersEqual — true если ответы совпадают по строке (без учёта регистра/пробелов)
+// или являются численно равными (учитывая , или . и дроби).
+func answersEqual(userAns, correctAns string) bool {
+	nu := normalize(userAns)
+	nc := normalize(correctAns)
+
+	// 1) точное строковое совпадение (case-insensitive)
+	if nu == nc {
+		return true
+	}
+
+	// 2) попробуем числовое сравнение
+	fu, okU := tryParseNumber(nu)
+	fc, okC := tryParseNumber(nc)
+	if okU && okC {
+		const eps = 1e-9
+		if math.Abs(fu-fc) <= eps {
+			return true
+		}
+	}
+
+	// 3) ещё попытка: убрать пробелы и сравнить (полезно для latex без пробелов)
+	if strings.ReplaceAll(nu, " ", "") == strings.ReplaceAll(nc, " ", "") {
+		return true
+	}
+
+	return false
 }
